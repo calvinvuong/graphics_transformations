@@ -59,15 +59,86 @@ void parse_file ( char * filename,
 
   FILE *f;
   char line[256];
+
+  int i = 0;
+  double args[10];
+  
   clear_screen(s);
 
   if ( strcmp(filename, "stdin") == 0 ) 
     f = stdin;
   else
     f = fopen(filename, "r");
-  
+
   while ( fgets(line, 255, f) != NULL ) {
     line[strlen(line)-1]='\0';
+
+    // line command
+    if ( strcmp(line, "line") == 0 ) {
+      // get arguments
+      fgets(line, 255, f);
+      line[strlen(line)-1] = '\0';
+
+      // split arguments by space
+      i = 0;
+      while ( line != NULL ) {
+	args[i] = atof( strsep(&line, " ") );
+	i++;
+      }
+      
+      // add points
+      add_edge(edges, args[0], args[1], args[2], args[3], args[4], args[5]);
+    }
+    
+    // ident command
+    else if ( strcmp(line, "ident") == 0 ) {
+      ident(transform);
+    }
+
+    // scale command
+    else if ( strcmp(line, "scale") == 0 ) {
+      //get arguments
+      fgets(line, 255, f);
+      line[strlen(line)-1] = '\0';
+
+      // split arguments by space
+      i = 0;
+      while ( line != NULL ) {
+	args[i] = atof( strsep(&line, " ") );
+	i++;
+      }
+
+      // modify transformation matrix
+      struct matrix * scale = make_scale(args[0], args[1], args[2]);
+      matrix_mult(scale, transform);
+
+      // free matrix
+      free_matrix(scale);
+    }
+
+    // move command
+    else if ( strcmp(line, "move") == 0 ) {
+      // get arguments
+      fgets(line, 255, f);
+      line[strlen(line)-1] = '\0';
+
+      // split arguments by space
+      i = 0;
+      while ( line != NULL ) {
+	args[i] = atof( strsep(&line, " ") );
+	i++;
+      }
+
+      // modify translation matrix
+      struct matrix * translate = make_translate(args[0], args[1], args[2]);
+      matrix_mult(translate, transform);
+
+      // free matrix
+      free_matrix(translate);
+    }
+
+    // rotate command
+    
     printf(":%s:\n",line);
   }
 }
