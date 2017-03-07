@@ -62,6 +62,7 @@ void parse_file ( char * filename,
 
   int i = 0;
   double args[10];
+  char rot_axis;
   
   clear_screen(s);
 
@@ -138,7 +139,53 @@ void parse_file ( char * filename,
     }
 
     // rotate command
-    
+    else if ( strcmp(line, "rotate") == 0 ) {
+      // get arguments
+      fgets(line 255, f);
+      line[strlen(line)-1] = '\0';
+
+      // get rotation axis
+      rot_axis = strsep(&line, " ");
+
+      // split by space to get other args
+      i = 0;
+      while ( line != NULL ) {
+	args[i] = atof( strsep(&line, " ") );
+	i++;
+      }
+
+      // call proper rotation function
+      struct matrix * rotate;
+      if ( rot_axis == 'x' )
+	rotate = make_rotX(args[0]);
+      else if ( rot_axis == 'y' )
+	rotate = make_rotY(args[0]);
+      else if ( rot_axis == 'z' )
+	rotate = make_rotZ(args[0]);
+
+      // modify translatin matrix
+      matrix_mult(rotate, transform);
+
+      // free matrix
+      free_matrix(rotate);
+    }
+
+    else if ( strcmp(line, "apply") == 0 ) {
+      matrix_mult(transform, edges);
+    }
+
+    else if ( strcmp(line, "display") == 0 ) {
+      draw_lines(edges, s, c);
+      display(s);
+    }
+
+    else if ( strcmp(line, "save") == 0 ) {
+      // get file name
+      fgets(line 255, f);
+      line[strlen(line)-1] = '\0';
+
+      save_extension(s, line);
+    }
     printf(":%s:\n",line);
   }
 }
