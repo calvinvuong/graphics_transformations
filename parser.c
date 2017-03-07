@@ -59,10 +59,16 @@ void parse_file ( char * filename,
 
   FILE *f;
   char line[256];
-
+  char *S = line;
+  
   int i = 0;
   double args[10];
   char rot_axis;
+
+  color c;
+  c.red = 0;
+  c.blue = 0;
+  c.green = 255;
   
   clear_screen(s);
 
@@ -73,17 +79,21 @@ void parse_file ( char * filename,
 
   while ( fgets(line, 255, f) != NULL ) {
     line[strlen(line)-1]='\0';
-
+    printf(":%s:\n",line);
+    
     // line command
     if ( strcmp(line, "line") == 0 ) {
+      printf("hi\n");
       // get arguments
       fgets(line, 255, f);
       line[strlen(line)-1] = '\0';
 
       // split arguments by space
+      S = line;
       i = 0;
-      while ( line != NULL ) {
-	args[i] = atof( strsep(&line, " ") );
+      while ( S != NULL ) {
+	args[i] = atof( strsep(&S, " ") );
+	printf("%f, ", args[i]);
 	i++;
       }
       
@@ -103,9 +113,10 @@ void parse_file ( char * filename,
       line[strlen(line)-1] = '\0';
 
       // split arguments by space
+      S = line;
       i = 0;
-      while ( line != NULL ) {
-	args[i] = atof( strsep(&line, " ") );
+      while ( S != NULL ) {
+	args[i] = atof( strsep(&S, " ") );
 	i++;
       }
 
@@ -124,9 +135,10 @@ void parse_file ( char * filename,
       line[strlen(line)-1] = '\0';
 
       // split arguments by space
+      S = line;
       i = 0;
-      while ( line != NULL ) {
-	args[i] = atof( strsep(&line, " ") );
+      while ( S != NULL ) {
+	args[i] = atof( strsep(&S, " ") );
 	i++;
       }
 
@@ -141,16 +153,17 @@ void parse_file ( char * filename,
     // rotate command
     else if ( strcmp(line, "rotate") == 0 ) {
       // get arguments
-      fgets(line 255, f);
+      fgets(line, 255, f);
       line[strlen(line)-1] = '\0';
 
       // get rotation axis
-      rot_axis = strsep(&line, " ");
-
+      rot_axis = *strsep(&S, " ");
+      
       // split by space to get other args
+      S = line;
       i = 0;
-      while ( line != NULL ) {
-	args[i] = atof( strsep(&line, " ") );
+      while ( S != NULL ) {
+	args[i] = atof( strsep(&S, " ") );
 	i++;
       }
 
@@ -181,12 +194,12 @@ void parse_file ( char * filename,
 
     else if ( strcmp(line, "save") == 0 ) {
       // get file name
-      fgets(line 255, f);
+      fgets(line, 255, f);
       line[strlen(line)-1] = '\0';
 
       save_extension(s, line);
     }
-    printf(":%s:\n",line);
+
   }
 }
   
