@@ -83,7 +83,7 @@ void parse_file ( char * filename,
     
     // line command
     if ( strcmp(line, "line") == 0 ) {
-      printf("hi\n");
+
       // get arguments
       fgets(line, 255, f);
       line[strlen(line)-1] = '\0';
@@ -93,7 +93,6 @@ void parse_file ( char * filename,
       i = 0;
       while ( S != NULL ) {
 	args[i] = atof( strsep(&S, " ") );
-	printf("%f, ", args[i]);
 	i++;
       }
       
@@ -156,11 +155,11 @@ void parse_file ( char * filename,
       fgets(line, 255, f);
       line[strlen(line)-1] = '\0';
 
+      S = line;
       // get rotation axis
       rot_axis = *strsep(&S, " ");
       
       // split by space to get other args
-      S = line;
       i = 0;
       while ( S != NULL ) {
 	args[i] = atof( strsep(&S, " ") );
@@ -188,6 +187,7 @@ void parse_file ( char * filename,
     }
 
     else if ( strcmp(line, "display") == 0 ) {
+      clear_screen(s);
       draw_lines(edges, s, c);
       display(s);
     }
@@ -195,7 +195,8 @@ void parse_file ( char * filename,
     else if ( strcmp(line, "save") == 0 ) {
       // get file name
       fgets(line, 255, f);
-      line[strlen(line)-1] = '\0';
+      if ( line[strlen(line)-1] == '\n' )
+	line[strlen(line)-1] = '\0';
 
       save_extension(s, line);
     }
