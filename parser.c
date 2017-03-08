@@ -200,6 +200,8 @@ void parse_file ( char * filename,
 
       save_extension(s, line);
     }
+    else if ( strcmp(line, "quit") == 0 )
+      return;
 
   }
 }
