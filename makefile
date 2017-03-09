@@ -23,6 +23,6 @@ parser.o: parser.c parser.h matrix.h draw.h display.h ml6.h
 
 run: $(OBJECTS)
 	$(CC) -o main $(OBJECTS) $(LDFLAGS)
-	./main script
+	./main
 clean:
 	rm *.o *~
